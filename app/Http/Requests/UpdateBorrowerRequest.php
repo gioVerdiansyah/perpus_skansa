@@ -22,7 +22,8 @@ class UpdateBorrowerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'pinjam' => 'required|numeric|gt:0',
+            'return_date' => 'required|date|after:today|before_or_equal:' . date('Y-m-d', strtotime('+1 month')),
         ];
     }
 }

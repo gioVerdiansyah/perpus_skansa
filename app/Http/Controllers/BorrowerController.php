@@ -37,7 +37,7 @@ class BorrowerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pinjam' => 'required|numeric',
+            'pinjam' => 'required|numeric|gt:0',
             'return_date' => 'required|date|after:today|before_or_equal:' . date('Y-m-d', strtotime('+1 month')),
         ]);
 
@@ -80,7 +80,7 @@ class BorrowerController extends Controller
      */
     public function update(UpdateBorrowerRequest $request, Borrower $borrower)
     {
-        //
+
     }
 
     /**
@@ -88,6 +88,13 @@ class BorrowerController extends Controller
      */
     public function destroy(Borrower $borrower)
     {
-        //
+        $nameUser = $borrower->user->name;
+        $pinjamnya = $borrower->book->title;
+        $borrower->delete();
+
+        return redirect()->route('borrower.index')->with('message', [
+            'title' => "Berhasil!",
+            'text' => "Berhasil mengapus Peminjam: $nameUser yang meminjam buku $pinjamnya"
+        ]);
     }
 }
