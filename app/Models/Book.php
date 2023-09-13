@@ -14,7 +14,6 @@ class Book extends Model
     {
         return $this->belongsTo(Category::class);
     }
-
     public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class);
@@ -23,9 +22,12 @@ class Book extends Model
     {
         return $this->belongsTo(Publisher::class);
     }
-
     public function borrower(): HasMany
     {
         return $this->hasMany(Borrower::class);
+    }
+    public function comment(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 }

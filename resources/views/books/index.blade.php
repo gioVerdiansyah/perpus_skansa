@@ -1,35 +1,50 @@
 <x-app-layout>
     <x-slot name="header">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Books Data') }}
-            </h2>
-            <x-search-to :where="__('books')"/>
-            <x-create-to :create="__('books')"/>
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Books Data') }}
+        </h2>
+        <x-search-to :where="__('books')" />
+        <x-create-to :create="__('books')" />
     </x-slot>
 
     <div class="py-12 " id="books">
         <div class="mx-auto flex flex-wrap sm:px-6 lg:px-8">
-        @foreach ($books as $book)
-            <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden md:max-w-2xl mt-4">
-              <div class="md:flex">
-                <div class="md:flex-shrink-0 p-7">
-                  <img class="w-full object-cover md:w-40 border-2 border-" src="{{ asset('image/thumbnail-book/' . $book->thumbnail) }}" alt="Gambar Buku">
+            @foreach ($books as $book)
+                <div
+                    class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden md:max-w-2xl mt-4">
+                    <div class="md:flex">
+                        <div class="md:flex-shrink-0 p-7">
+                            <img class="w-full object-cover md:w-40 border-2 border-"
+                                src="{{ asset('image/thumbnail-book/' . $book->thumbnail) }}" alt="Gambar Buku">
+                        </div>
+                        <div class="p-8 flex flex-col justify-evenly">
+                            <div class="flex flex-col">
+                                <p class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+                                    {{ $book->category->name }}</p>
+                                <a href="{{ route('books.show', $book) }}"
+                                    class="block mt-1 text-lg leading-tight font-medium text-gray-500 hover:underline transition duration-300">{{ $book['title'] }}</a>
+                                <p class="m-5 text-white">{{ $book->description }}</p>
+                            </div>
+                            <div class="flex flex-column">
+                                <button
+                                    class="w-max p-2 ml-3 rounded text-white bg-orange-500 hover:bg-orange-600
+                    hover:text-indigo-700 hover:underline duration-300 ease-out"
+                                    id="pinjam" onclick="pinjam('{{ $book->title }}', '{{ $book->id }}')">Pinjam
+                                    <i class="fa-solid fa-book"></i>
+                                </button>
+                                <button
+                                    class="w-max p-2 ml-3 rounded text-white bg-orange-500 hover:bg-orange-600
+                    hover:text-indigo-700 hover:underline duration-300 ease-out"
+                                    id="komentar"
+                                    onclick="window.location.href = '{{ route('books.show', $book->id) }}'">Komentar
+                                    <i class="fa-solid fa-comment"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-8 flex flex-col justify-evenly">
-                <div class="flex flex-col">
-                    <p class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{{ $book->category->name }}</p>
-                    <a href="{{ route('books.show', $book) }}" class="block mt-1 text-lg leading-tight font-medium text-gray-500 hover:underline transition duration-300">{{ $book['title'] }}</a>
-                    <p class="m-5 text-white">{{ $book->description }}</p>
-                </div>
-                <div class="flex flex-column">
-                    <button class="w-max p-2 ml-3 rounded text-white bg-orange-500 hover:bg-orange-600
-                    hover:text-indigo-700 hover:underline duration-300 ease-out" id="pinjam" onclick="pinjam('{{ $book->title }}', '{{ $book->id }}')">Pinjam<i class="fa-solid fa-delete-left ml-1"></i></button>
-                </div>
-                </div>
-            </div>
+            @endforeach
         </div>
-        @endforeach
-    </div>
     </div>
     <script>
         function pinjam(name, bookId) {
@@ -57,36 +72,36 @@
             });
             const form = document.getElementById('pinjamForm');
 
-        // Tambahkan event listener untuk menghandle submit form secara asynchronous
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Menghentikan submit form bawaan
+            // Tambahkan event listener untuk menghandle submit form secara asynchronous
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Menghentikan submit form bawaan
 
-            const formData = new FormData(form); // Dapatkan data form
+                const formData = new FormData(form); // Dapatkan data form
 
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                });
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                    });
 
-                if (!response.ok) {
-                    throw new Error(response.statusText);
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+
+                    const data = await response.json();
+
+                    if (data && data.message) {
+                        Swal.fire('Sukses!', data.message, 'success');
+                    } else if (data && data.error) {
+                        Swal.fire('Kesalahan!', data.error, 'error');
+                    }
+                } catch (error) {
+                    Swal.fire('Kesalahan!', `Request gagal: ${error.message}`, 'error');
                 }
-
-                const data = await response.json();
-
-                if (data && data.message) {
-                    Swal.fire('Sukses!', data.message, 'success');
-                } else if (data && data.error) {
-                    Swal.fire('Kesalahan!', data.error, 'error');
-                }
-            } catch (error) {
-                Swal.fire('Kesalahan!', `Request gagal: ${error.message}`, 'error');
-            }
-        });
+            });
         };
     </script>
 </x-app-layout>

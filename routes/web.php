@@ -40,8 +40,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/books/search/', [Book::class, 'search'])->name('books.search');
 
     Route::resource('/books', Book::class);
+    Route::post('/books/{book}/comment', [Book::class, 'commentStore'])->name('books.comment.store');
+    Route::put('/books/comment/update/{book}', [Book::class, 'commentUpdate'])->name('books.comment.update');
     Route::resource('/categories', Category::class);
     Route::resource('/author', Auhtor::class);
     Route::resource('/publisher', Publisher::class);
-    Route::resource('/borrower', Borrower::class);
+
+    // Route::resource('/borrower', Borrower::class);
+    Route::get('/borrower', [Borrower::class, 'index'])->name('borrower.index');
+    Route::post('/borrower', [Borrower::class, 'store'])->name('borrower.store');
+    Route::put('/borrower/{borrower}', [Borrower::class, 'store'])->name('borrower.update');
+    Route::delete('/borrower/{borrower}', [Borrower::class, 'destroy'])->name('borrower.destroy');
 });
