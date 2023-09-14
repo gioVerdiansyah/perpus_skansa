@@ -15,7 +15,7 @@
                     <div class="md:flex">
                         <div class="md:flex-shrink-0 p-7">
                             <img class="w-full object-cover md:w-40 border-2 border-"
-                                src="{{ asset('image/thumbnail-book/' . $book->thumbnail) }}" alt="Gambar Buku">
+                                src="{{ asset('storage/image/thumbnail-book/' . $book->thumbnail) }}" alt="Gambar Buku">
                         </div>
                         <div class="p-8 flex flex-col justify-evenly">
                             <div class="flex flex-col">

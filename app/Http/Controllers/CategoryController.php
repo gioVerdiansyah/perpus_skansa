@@ -83,7 +83,7 @@ class CategoryController extends Controller
             $category->save();
             return redirect()->route('categories.show', $category->id)->with('message', [
                 'title' => "Berhasil",
-                'text' => "Berhasil meupdate kategori $name menjadi $request->title"
+                'text' => "Berhasil meupdate kategori $name menjadi $request->name"
             ]);
         } else {
             return redirect()->route('categories.show', $category->id)->with('message', [

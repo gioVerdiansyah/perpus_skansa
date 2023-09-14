@@ -40,8 +40,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/books/search/', [Book::class, 'search'])->name('books.search');
 
     Route::resource('/books', Book::class);
-    Route::post('/books/{book}/comment', [Book::class, 'commentStore'])->name('books.comment.store');
-    Route::put('/books/comment/update/{book}', [Book::class, 'commentUpdate'])->name('books.comment.update');
+    Route::post('/books/{books}/comment', [Book::class, 'commentStore'])->name('books.comment.store');
+    Route::put('/books/comment/update/{comment}', [Book::class, 'commentUpdate'])->name('books.comment.update');
+    Route::delete('/books/comment/delete/{comment}', [Book::class, 'commentDelete'])->name('books.comment.delete');
     Route::resource('/categories', Category::class);
     Route::resource('/author', Auhtor::class);
     Route::resource('/publisher', Publisher::class);
@@ -49,6 +50,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::resource('/borrower', Borrower::class);
     Route::get('/borrower', [Borrower::class, 'index'])->name('borrower.index');
     Route::post('/borrower', [Borrower::class, 'store'])->name('borrower.store');
-    Route::put('/borrower/{borrower}', [Borrower::class, 'store'])->name('borrower.update');
+    Route::put('/borrower/{borrower}', [Borrower::class, 'update'])->name('borrower.update');
     Route::delete('/borrower/{borrower}', [Borrower::class, 'destroy'])->name('borrower.destroy');
 });

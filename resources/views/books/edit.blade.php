@@ -34,29 +34,56 @@
                         <p class="text-red-500 text-xs italic">{{ $message }}</p>
                     @enderror
                 </div>
+
                 <div class="mb-4">
                     <label for="categories" class="block text-gray-300 font-medium">Kategori</label>
-                    <input id="categories" type="text"
-                        class="form-input rounded dark:bg-gray-500 w-full dark:border-gray-600 @error('categories') border-red-500 @enderror"
-                        name="categories" value="{{ $book->category->name }}" required>
+                    <select id="categories"
+                        class="form-select rounded dark:bg-gray-500 w-full dark:border-gray-600 @error('categories') border-red-500 @enderror"
+                        name="categories" required>
+                        <option value="">Pilih Kategori</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ old('categories', $book->category->name) == $category->name ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
                     @error('categories')
                         <p class="text-red-500 text-xs italic">{{ $message }}</p>
                     @enderror
                 </div>
+
                 <div class="mb-4">
                     <label for="author" class="block text-gray-300 font-medium">Penulis</label>
-                    <input id="author" type="text"
-                        class="form-input rounded dark:bg-gray-500 w-full dark:border-gray-600 @error('author') border-red-500 @enderror"
-                        name="author" value="{{ $book->author->name }}" required>
+                    <select id="author"
+                        class="form-select rounded dark:bg-gray-500 w-full dark:border-gray-600 @error('author') border-red-500 @enderror"
+                        name="author" required>
+                        <option value="">Pilih Penulis</option>
+                        @foreach ($authors as $author)
+                            <option value="{{ $author->id }}"
+                                {{ old('author', $book->author->name) == $author->name ? 'selected' : '' }}>
+                                {{ $author->name }}
+                            </option>
+                        @endforeach
+                    </select>
                     @error('author')
                         <p class="text-red-500 text-xs italic">{{ $message }}</p>
                     @enderror
                 </div>
+
                 <div class="mb-4">
                     <label for="publisher" class="block text-gray-300 font-medium">Penerbit</label>
-                    <input id="publisher" type="text"
-                        class="form-input rounded dark:bg-gray-500 w-full dark:border-gray-600 @error('publisher') border-red-500 @enderror"
-                        name="publisher" value="{{ $book->publisher->name }}" required>
+                    <select id="publisher"
+                        class="form-select rounded dark:bg-gray-500 w-full dark:border-gray-600 @error('publisher') border-red-500 @enderror"
+                        name="publisher" required>
+                        <option value="">Pilih Penerbit</option>
+                        @foreach ($publishers as $publisher)
+                            <option value="{{ $publisher->id }}"
+                                {{ old('publisher', $book->publisher->name) == $publisher->name ? 'selected' : '' }}>
+                                {{ $publisher->name }}
+                            </option>
+                        @endforeach
+                    </select>
                     @error('publisher')
                         <p class="text-red-500 text-xs italic">{{ $message }}</p>
                     @enderror
@@ -65,7 +92,7 @@
                 {{-- <input type="hidden" name="oldThumbnail" value="{{ $book->thumbnail }}"> --}}
 
                 <div class="mb-4">
-                    <img src="{{ asset('image/thumbnail-book/' . $book->thumbnail) }}"
+                    <img src="{{ asset('storage/image/thumbnail-book/' . $book->thumbnail) }}"
                         alt="Thumbnail buku {{ $book->title }}" id="img" width="70">
                     <label for="thumbnail" class="block text-gray-300 font-medium">Thumbnail</label>
                     <input id="thumbnail" type="file" value="{{ $book->thumbnail }}"

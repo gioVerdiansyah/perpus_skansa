@@ -12,6 +12,7 @@ use App\Models\Publisher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
@@ -37,7 +38,10 @@ class BookController extends Controller
      */
     public function create()
     {
-        return view('books.create');
+        $categories = Category::all();
+        $authors = Author::all();
+        $publishers = Publisher::all();
+        return view('books.create', compact('categories', 'authors', 'publishers'));
     }
 
     /**
@@ -45,28 +49,21 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        // Cari penulis berdasarkan nama
-        $author = Author::where('name', $request->author)->first();
-        $category = Category::where('name', $request->categories)->first();
-        $publisher = Publisher::where('name', $request->publisher)->first();
+        $fileName = $request->file('thumbnail')->hashName();
 
-        // mengirim file buku dengan mengganti namanya dengan nama buku yang baru saja di inputkannya
-        $fileName = time() . "-" . $request->thumbnail->getClientOriginalName();
+        $request->thumbnail->storeAs('public/image/thumbnail-book', $fileName);
 
-        $request->thumbnail->move('image/thumbnail-book', $fileName);
-
-        // Simpan buku dengan author_id yang sudah diproses
         $book = new Book;
         $book->isbn = $request->isbn;
         $book->title = $request->title;
         $book->thumbnail = $fileName;
         $book->description = $request->description;
-        $book->category_id = $category->id;
-        $book->author_id = $author->id;
-        $book->publisher_id = $publisher->id;
+        $book->category_id = $request->categories;
+        $book->author_id = $request->author;
+        $book->publisher_id = $request->publisher;
         $book->save();
 
-        return redirect()->route('books.index')->with('message', [
+        return to_route('books.index')->with('message', [
             'title' => 'Sukses',
             'text' => "Berhasil menambah buku " . $request->title
         ]);
@@ -83,9 +80,14 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book)
+    public function edit($book)
     {
-        return view('books.edit', compact('book'));
+        $book = Book::with('category', 'author', 'publisher')->where('id', $book)->first();
+        $categories = Category::all();
+        $authors = Author::all();
+        $publishers = Publisher::all();
+
+        return view('books.edit', compact('book', 'categories', 'authors', 'publishers'));
     }
 
     /**
@@ -95,46 +97,35 @@ class BookController extends Controller
     {
         $book->isbn = $request->isbn;
         $book->title = $request->title;
-
+        $fileName = $book->thumbnail;
         $title = $book->title;
+
         // proses meupdate thumbnail buku
 
-
-        if (is_null($request->thumbnail)) {
-            $fileName = $book->thumbnail;
-        } else {
-            $fileName = time() . "-" . $request->thumbnail->getClientOriginalName();
-            $path = public_path('image/thumbnail-book/' . $book->thumbnail);
-            if (file_exists($path)) {
-                unlink($path);
+        if ($request->file('thumbnail')) {
+            $fileName = $request->file('thumbnail')->hashName();
+            $path = storage_path('public/image/thumbnail-book/' . $book->thumbnail);
+            if ($path) {
+                Storage::delete($path);
             }
-            $request->thumbnail->move(public_path('image/thumbnail-book'), $fileName);
+            $request->thumbnail->storeAs('public/image/thumbnail-book', $fileName);
         }
 
         $book->thumbnail = $fileName;
         $book->description = $request->description;
+        $book->category_id = $request->categories;
+        $book->author_id = $request->author;
+        $book->publisher_id = $request->publisher;
 
-        $category = Category::where('name', $request->categories)->first();
-        $book->category_id = $category->id;
-
-        $author = Author::where('name', $request->author)->first();
-        $book->author_id = $author->id;
-
-        $publisher = Publisher::where('name', $request->publisher)->first();
-        $book->publisher_id = $publisher->id;
-
-        // Memeriksa apakah ada perubahan pada model
         if ($book->isDirty()) {
             $book->save();
 
-            // Redirect ke halaman tampilan buku yang diperbarui
-            return redirect()->route('books.show', $book->id)->with('message', [
+            return to_route('books.show', $book->id)->with('message', [
                 'title' => "Berhasil!",
                 'text' => "Berhasil meupdate buku $title"
             ]);
         } else {
-            // Tidak ada perubahan, kembalikan respons tanpa menyimpan data
-            return redirect()->route('books.show', $book->id)->with('message', [
+            return to_route('books.show', $book->id)->with('message', [
                 'icon' => 'info',
                 'title' => "Tidak ada Perubahan!",
                 'text' => "Anda tidak melakukan perubahan pada buku " . $title
@@ -150,7 +141,7 @@ class BookController extends Controller
         $title = $book->title;
         unlink(public_path('image/thumbnail-book/' . $book->thumbnail));
         $book->delete();
-        return redirect()->route('books.index')->with('message', [
+        return to_route('books.index')->with('message', [
             'title' => "Berhasil",
             'text' => "Berhasil mehapus buku " . $title
         ]);
@@ -217,5 +208,17 @@ class BookController extends Controller
                 'text' => "Anda tidak melakukan perubahan pada komentar anda!"
             ]);
         }
+    }
+
+    public function commentDelete(Comment $comment)
+    {
+        $comment_value = $comment->comment_value;
+        $comment_book = $comment->book->title;
+
+        $comment->delete();
+        return redirect()->back()->with('message', [
+            'title' => "Berhasil!",
+            'text' => "Berhasil menghapus komentar pada buku $comment_book dengan isi komentar $comment_value"
+        ]);
     }
 }

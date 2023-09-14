@@ -11,7 +11,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-gray-700 shadow-xl rounded-lg overflow-hidden">
                 <div class="sm:flex sm:items-center px-6 py-4">
-                    <img src="{{ asset('image/thumbnail-book/' . $book->thumbnail) }}" alt="Book Cover"
+                    <img src="{{ asset('storage/image/thumbnail-book/' . $book->thumbnail) }}" alt="Book Cover"
                         class="sm:w-48 mx-auto sm:mx-0 sm:mr-10 mb-4 sm:mb-0 rounded-lg shadow-md">
                     <div class="sm:text-left text-center">
                         <h1 class="text-3xl font-extrabold text-gray-100 leading-tight mb-2">{{ $book->title }}</h1>
@@ -240,6 +240,31 @@
                 }
             }
 
+        });
+    }
+
+    function deleteComment(commentId) {
+        Swal.fire({
+            title: 'Hapus Komentar',
+            text: 'Anda yakin ingin menghapus komentar ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const deleteForm = document.createElement('form');
+                deleteForm.method = 'POST';
+                deleteForm.action = `{{ route('books.comment.delete', '') }}/${commentId}`;
+                deleteForm.innerHTML = `
+                @csrf
+                @method('DELETE')
+            `;
+                document.body.appendChild(deleteForm);
+                deleteForm.submit();
+            }
         });
     }
 </script>

@@ -24,11 +24,11 @@ class UpdateBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'isbn' => ['required', 'max:19', Rule::exists('books', 'isbn')],
-            'title' => ['required', 'string', Rule::exists('books', 'title')],
-            'categories' => ['required', 'string', Rule::exists('categories', 'name')],
-            'author' => ['required', 'string', Rule::exists('authors', 'name')],
-            'publisher' => ['required', 'string', Rule::exists('publishers', 'name')],
+            'isbn' => ['required', 'max:19', 'unique:books,isbn'],
+            'title' => ['required', 'string', 'unique:books,title'],
+            'categories' => ['required', 'string', Rule::exists('categories', 'id')],
+            'author' => ['required', 'string', Rule::exists('authors', 'id')],
+            'publisher' => ['required', 'string', Rule::exists('publishers', 'id')],
             'description' => 'required',
             'thumbnail' => 'file|image|max:10000'
         ];
