@@ -36,17 +36,19 @@
 
                 <div class="mb-4">
                     <label for="categories" class="block text-gray-300 font-medium">Kategori</label>
-                    <select id="categories"
-                        class="form-select rounded dark:bg-gray-500 w-full dark:border-gray-600 @error('categories') border-red-500 @enderror"
-                        name="categories" required>
-                        <option value="">Pilih Kategori</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}"
-                                {{ old('categories') == $category->name ?? 'selected' }}>
-                                {{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="w-full">
+                        <select id="categories"
+                            class="form-select rounded dark:bg-gray-500 w-full dark:border-gray-600 @error('categories') border-red-500 @enderror"
+                            name="categories" required>
+                            <option value="">Pilih Kategori</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}"
+                                    {{ old('categories') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     @error('categories')
                         <p class="text-red-500 text-xs italic">{{ $message }}</p>
                     @enderror
@@ -55,11 +57,11 @@
                 <div class="mb-4">
                     <label for="author" class="block text-gray-300 font-medium">Penulis</label>
                     <select id="author"
-                        class="form-select rounded dark:bg-gray-500 w-full dark:border-gray-600 @error('author') border-red-500 @enderror"
+                        class="form-select rounded dark-bg-gray-500 w-full dark:border-gray-600 @error('author') border-red-500 @enderror"
                         name="author" required>
                         <option value="">Pilih Penulis</option>
                         @foreach ($authors as $author)
-                            <option value="{{ $author->id }}" {{ old('author') == $author->name ?? 'selected' }}>
+                            <option value="{{ $author->id }}" {{ old('author') == $author->id ? 'selected' : '' }}>
                                 {{ $author->name }}
                             </option>
                         @endforeach
@@ -72,12 +74,12 @@
                 <div class="mb-4">
                     <label for="publisher" class="block text-gray-300 font-medium">Penerbit</label>
                     <select id="publisher"
-                        class="form-select rounded dark:bg-gray-500 w-full dark:border-gray-600 @error('publisher') border-red-500 @enderror"
+                        class="form-select rounded dark-bg-gray-500 w-full dark:border-gray-600 @error('publisher') border-red-500 @enderror"
                         name="publisher" required>
                         <option value="">Pilih Penerbit</option>
                         @foreach ($publishers as $publisher)
                             <option value="{{ $publisher->id }}"
-                                {{ old('publisher') === $publisher->name ?? 'selected' }}>
+                                {{ old('publisher', $publisher->id) == $publisher->id ? 'selected' : '' }}>
                                 {{ $publisher->name }}
                             </option>
                         @endforeach
@@ -124,3 +126,10 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+    $(document).ready(function() {
+        $('#categories').select2();
+        $('#author').select2();
+        $('#publisher').select2();
+    });
+</script>

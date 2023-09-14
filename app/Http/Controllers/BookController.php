@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
-use App\Models\Book;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Models\Author;
+use App\Models\Book;
 use App\Models\Category;
-use App\Models\Comment;
 use App\Models\Publisher;
 use App\Models\User;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -139,7 +139,7 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         $title = $book->title;
-        unlink(public_path('image/thumbnail-book/' . $book->thumbnail));
+        Storage::delete(storage_path('public/image/thumbnail-book/' . $book->thumbnail));
         $book->delete();
         return to_route('books.index')->with('message', [
             'title' => "Berhasil",
@@ -174,8 +174,7 @@ class BookController extends Controller
     public function commentUpdate(Request $request, Comment $comment)
     {
         $validator = Validator::make($request->all(), [
-            'book_id' => 'required|integer|exists:comments,book_id',
-            'comment_value' => 'required|string|max:2000',
+            'comment_value' => 'required|string|max:500',
             'rating' => 'required|integer|max:5',
         ]);
 

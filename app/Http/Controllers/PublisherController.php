@@ -6,6 +6,7 @@ use App\Http\Requests\StorePublisherRequest;
 use App\Http\Requests\UpdatePublisherRequest;
 use App\Models\Publisher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PublisherController extends Controller
 {
@@ -45,8 +46,8 @@ class PublisherController extends Controller
         $publisher->website = $request->website;
 
         // tambah gambar
-        $fileName = time() . "-" . $request->logo->getClientOriginalName();
-        $request->logo->move('image/logo-publisher', $fileName);
+        $fileName = $request->file('logo')->hashName();
+        $request->logo->storeAs('public/image/logo-publisher/' . $fileName);
 
         $publisher->logo = $fileName;
         $publisher->since = $request->since;
@@ -82,21 +83,21 @@ class PublisherController extends Controller
     public function update(UpdatePublisherRequest $request, Publisher $publisher)
     {
         $name = $publisher->name;
+        $fileName = $publisher->logo;
+
         $publisher->name = $request->name;
         $publisher->address = $request->address;
         $publisher->email = $request->email;
         $publisher->phone = $request->phone;
         $publisher->website = $request->website;
 
-        if (is_null($request->logo)) {
-            $fileName = $publisher->logo;
-        } else {
-            $fileName = time() . "-" . $request->logo->getClientOriginalName();
-            $path = public_path('image/logo-publisher/' . $publisher->logo);
-            if (file_exists($path)) {
-                unlink($path);
+        if ($request->file('logo')) {
+            $fileName = $request->file('logo')->hashName();
+            $path = storage_path('public/image/logo-publisher/' . $publisher->logo);
+            if ($path) {
+                Storage::delete($path);
             }
-            $request->logo->move('image/logo-publisher', $fileName);
+            $request->logo->storeAs('public/image/logo-publisher/' . $fileName);
         }
 
         $publisher->logo = $fileName;
@@ -105,12 +106,12 @@ class PublisherController extends Controller
 
         if ($publisher->isDirty()) {
             $publisher->save();
-            return redirect()->route('publisher.index')->with('message', [
+            return to_route('publisher.show', $publisher->id)->with('message', [
                 'title' => "Berhasil!",
                 'text' => "Berhasil meupdate Penerbit: $name"
             ]);
         } else {
-            return redirect()->route('publisher.index')->with('message', [
+            return to_route('publisher.show', $publisher->id)->with('message', [
                 'icon' => 'info',
                 'title' => "Tidak ada perubahan!",
                 'text' => "Anda tidak melakukan perubahan pada Penerbit: " . $name

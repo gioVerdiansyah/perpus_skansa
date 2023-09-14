@@ -28,7 +28,7 @@ class StoreBookRequest extends FormRequest
             'categories' => ['required', 'string', Rule::exists('categories', 'id')],
             'author' => ['required', 'string', Rule::exists('authors', 'id')],
             'publisher' => ['required', 'string', Rule::exists('publishers', 'id')],
-            'description' => 'required',
+            'description' => 'required|max:1000',
             'thumbnail' => 'required|file|image|max:10000'
         ];
     }

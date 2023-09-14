@@ -27,7 +27,7 @@ class StorePublisherRequest extends FormRequest
             'email' => 'required|email|unique:publishers,email',
             'phone' => 'required|numeric|gt:0|unique:publishers,phone',
             'website' => 'required|url',
-            'logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'logo' => 'image|max:2048',
             'since' => 'required|numeric|min:1900|max:' . date('Y'),
             'description' => 'required|string|max:1000',
         ];

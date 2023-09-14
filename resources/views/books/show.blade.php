@@ -133,7 +133,7 @@
                             <div class="flex space-x-2">
                                 @if (auth()->check() && $comment->user_id === auth()->user()->id)
                                     <button class="text-gray-400 hover:text-gray-200"
-                                        onclick="editComment({{ $comment->book_id }}, '{{ $comment->comment_value }}', '{{ $comment->rating }}')">Edit</button>
+                                        onclick="editComment({{ $comment->id }}, '{{ $comment->comment_value }}', '{{ $comment->rating }}')">Edit</button>
                                     <button class="text-red-500 hover:text-red-300"
                                         onclick="deleteComment({{ $comment->id }})">Hapus</button>
                                 @endif
@@ -176,7 +176,6 @@
         <form id="editCommentForm" action="{{ route('books.comment.update', '') }}/${commentId}" method="POST">
             @csrf
             @method('PUT')
-            <input type="hidden" name="book_id" value="${commentId}">
             <textarea id="editedComment" class="swal2-textarea" name="comment_value">${commentData.comment}</textarea>
             <div id="ratingStars" class="mt-2">
             </div>

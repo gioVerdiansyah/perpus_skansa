@@ -128,3 +128,10 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+    $(document).ready(function() {
+        $('#categories').select2();
+        $('#author').select2();
+        $('#publisher').select2();
+    });
+</script>

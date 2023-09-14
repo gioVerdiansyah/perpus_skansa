@@ -16,6 +16,10 @@
 
         <!-- Scripts -->
         <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
@@ -53,11 +57,14 @@
                             icon: "{{ session('message')['icon'] ?? 'success' }}",
                             title: "{{ session('message')['title'] }}",
                             text: "{{ session('message')['text'] }}",
-                            // timer: 5000,
+                            timer: 5000,
                             allowOutsideClick: false,
                             allowEscapeKey: false,
                         });
                     @endif
+                    $('#content > main > div > div > form > div > span').css('width', '100%');
+                    $('#content > main > div > div > form > div > span > span > span > span')
+                        .addClass(['dark:bg-gray-500', 'text-white']);
                 }, 3000);
             });
         </script>

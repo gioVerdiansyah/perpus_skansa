@@ -24,10 +24,10 @@
                                 class="px-6 py-3 bg-gray-50 dark:bg-gray-600 text-left text-xs leading-4 font-medium dark:text-white uppercase tracking-wider">
                                 Jumlah Pinjam</th>
                             <th
-                                class="px-6 py-3 bg-gray-50 dark:bg-gray-600 text-left text-xs leading-4 font-medium dark:text-white uppercase tracking-wider text-center">
+                                class="px-6 py-3 bg-gray-50 dark:bg-gray-600 text-xs leading-4 font-medium dark:text-white uppercase tracking-wider text-center">
                                 Tanggal <br>Pinjam</th>
                             <th
-                                class="px-6 py-3 bg-gray-50 dark:bg-gray-600 text-left text-xs leading-4 font-medium dark:text-white uppercase tracking-wider text-center">
+                                class="px-6 py-3 bg-gray-50 dark:bg-gray-600 text-xs leading-4 font-medium dark:text-white uppercase tracking-wider text-center">
                                 Tanggal <br>Pengembalian</th>
                             <th
                                 class="px-6 py-3 bg-gray-50 dark:bg-gray-600 text-left text-xs leading-4 font-medium dark:text-white uppercase tracking-wider">
@@ -38,7 +38,7 @@
                         @foreach ($borrowers as $borrower)
                             <tr>
                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                    <img src="{{ asset('image/thumbnail-book/' . $borrower->book->thumbnail) }}"
+                                    <img src="{{ asset('storage/image/thumbnail-book/' . $borrower->book->thumbnail) }}"
                                         alt="{{ $borrower->book->title }}" class="w-16 h-16 object-cover">
                                 </td>
                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $borrower->book->title }}</td>

@@ -44,7 +44,7 @@ class UpdatePublisherRequest extends FormRequest
                 Rule::unique('publishers', 'phone')->ignore($publisherId),
             ],
             'website' => 'required|url',
-            'logo' => 'nullable|mimes:jpeg,png,jpg|max:10000',
+            'logo' => 'nullable|max:10000',
             'since' => 'required|numeric|min:1900|max:' . date('Y'),
             'description' => 'required|string|max:1000',
         ];

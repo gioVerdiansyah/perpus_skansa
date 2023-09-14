@@ -5,16 +5,17 @@
             {{ __('Penerbit ' . $publisher->name) }}
         </h2>
         <div class="flex">
-            <x-edit-to class="mr-5" :edit="__('publisher')" :where="$publisher"/>
-            <x-delete-to :del="__('publisher')" :where="$publisher" :name="$publisher->name"/>
-            <x-back-to :back="__('publisher')"/>
+            <x-edit-to class="mr-5" :edit="__('publisher')" :where="$publisher" />
+            <x-delete-to :del="__('publisher')" :where="$publisher" :name="$publisher->name" />
+            <x-back-to :back="__('publisher')" />
         </div>
     </x-slot>
 
     <div class="container mx-auto p-6">
         <div class="grid grid-cols-5 gap-4">
             @forelse ($publisher->book as $row)
-                <a href="{{ route('publisher.show', $row->id) }}" class="p-4 bg-white shadow rounded-lg hover:bg-gray-100 hover:underline transition duration-300">{{ $row->title }}</a>
+                <a href="{{ route('publisher.show', $row->id) }}"
+                    class="p-4 bg-white shadow rounded-lg hover:bg-gray-100 hover:underline transition duration-300">{{ $row->title }}</a>
             @empty
                 <p class="text-center text-gray-500 dark:text-gray-400 mt-4">Belum ada Penerbit yang terkait</p>
             @endforelse
@@ -46,7 +47,8 @@
                 <div class="col-span-2 sm:col-span-1">
                     <dt class="text-gray-600 dark:text-gray-400">Logo</dt>
                     <dd>
-                        <img src="{{ asset('image/logo-publisher/' . $publisher->logo) }}" alt="Logo Penerbit {{ $publisher->name }}" class="h-24 w-24 object-contain">
+                        <img src="{{ asset('storage/image/logo-publisher/' . $publisher->logo) }}"
+                            alt="Logo Penerbit {{ $publisher->name }}" class="h-24 w-24 object-contain">
                     </dd>
                 </div>
                 <div class="col-span-2 sm:col-span-1">
